@@ -142,52 +142,77 @@ namespace BancomatConsoleApp
         static void AccountMenu()
         {
             List<string> menuItems = new List<string>() { "Переглянути баланс", "Зняти кошти",
-                "Поповнити рахунок", "Перерахувати кошти", "Повернутися назад" };
+        "Поповнити рахунок", "Перерахувати кошти", "Повернутися назад" };
+
             while (true)
             {
                 Console.Clear();
                 int selectedIndex = MenuLoop(menuItems);
-
-                switch (selectedIndex)
-                {
-                    case 0:
-                        currentAccount.GetBalance();
-                        break;
-                    case 1:
-                        Console.WriteLine("Введіть суму для зняття:");
-                        if (int.TryParse(Console.ReadLine(), out int amountWithDraw))
-                        {
-                            activeBankomat.WithDrawMoney(currentAccount, amountWithDraw);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Невірний формат суми.");
-                        }
-                        Console.ReadKey();
-                        break;
-                    case 2:
-                        Console.WriteLine("Введіть суму для поповнення:");
-                        if (int.TryParse(Console.ReadLine(), out int amountPut))
-                        {
-                            activeBankomat.PutMoney(currentAccount, amountPut);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Невірний формат суми.");
-                        }
-                        break;
-                    case 3:
-                        Console.WriteLine("Введіть номер рахунку отримувача:");
-                        string receiverAccountNumber = Console.ReadLine();
-                        Console.WriteLine("Введіть суму для перерахування:");
-                        int.TryParse(Console.ReadLine(), out int amountTransfer);
-                        selectedBank.TransferFunds(currentAccount.CardNumber, receiverAccountNumber, amountTransfer);
-                        break;
-                    case 4:
-                        return;
-                }
+                HandleAccountMenuSelection(selectedIndex);
             }
+        }
 
+        static void HandleAccountMenuSelection(int selectedIndex)
+        {
+            switch (selectedIndex)
+            {
+                case 0:
+                    currentAccount.GetBalance();
+                    break;
+                case 1:
+                    WithdrawMoney();
+                    break;
+                case 2:
+                    DepositMoney();
+                    break;
+                case 3:
+                    TransferFunds();
+                    break;
+                case 4:
+                    return;
+            }
+        }
+
+        static void WithdrawMoney()
+        {
+            Console.WriteLine("Введіть суму для зняття:");
+            if (int.TryParse(Console.ReadLine(), out int amountWithDraw))
+            {
+                activeBankomat.WithDrawMoney(currentAccount, amountWithDraw);
+            }
+            else
+            {
+                Console.WriteLine("Невірний формат суми.");
+            }
+            Console.ReadKey();
+        }
+
+        static void DepositMoney()
+        {
+            Console.WriteLine("Введіть суму для поповнення:");
+            if (int.TryParse(Console.ReadLine(), out int amountPut))
+            {
+                activeBankomat.PutMoney(currentAccount, amountPut);
+            }
+            else
+            {
+                Console.WriteLine("Невірний формат суми.");
+            }
+        }
+        static void TransferFunds()
+        {
+            Console.WriteLine("Введіть номер рахунку отримувача:");
+            string receiverAccountNumber = Console.ReadLine();
+
+            Console.WriteLine("Введіть суму для перерахування:");
+            if (int.TryParse(Console.ReadLine(), out int amountTransfer))
+            {
+                selectedBank.TransferFunds(currentAccount.CardNumber, receiverAccountNumber, amountTransfer);
+            }
+            else
+            {
+                Console.WriteLine("Невірний формат суми.");
+            }
         }
 
         static void CreateNewAccount()
