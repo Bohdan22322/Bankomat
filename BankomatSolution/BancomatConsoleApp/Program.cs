@@ -172,46 +172,43 @@ namespace BancomatConsoleApp
                     return;
             }
         }
+        static int GetValidatedAmount(string message)
+        {
+            Console.WriteLine(message);
+            if (int.TryParse(Console.ReadLine(), out int amount))
+                return amount;
+
+            Console.WriteLine("Невірний формат суми.");
+            return -1;
+        }
 
         static void WithdrawMoney()
         {
-            Console.WriteLine("Введіть суму для зняття:");
-            if (int.TryParse(Console.ReadLine(), out int amountWithDraw))
+            int amountWithDraw = GetValidatedAmount("Введіть суму для зняття:");
+            if (amountWithDraw > 0)
             {
                 activeBankomat.WithDrawMoney(currentAccount, amountWithDraw);
             }
-            else
-            {
-                Console.WriteLine("Невірний формат суми.");
-            }
-            Console.ReadKey();
         }
 
         static void DepositMoney()
         {
-            Console.WriteLine("Введіть суму для поповнення:");
-            if (int.TryParse(Console.ReadLine(), out int amountPut))
+            int amountPut = GetValidatedAmount("Введіть суму для поповнення:");
+            if (amountPut > 0)
             {
                 activeBankomat.PutMoney(currentAccount, amountPut);
             }
-            else
-            {
-                Console.WriteLine("Невірний формат суми.");
-            }
         }
+
         static void TransferFunds()
         {
             Console.WriteLine("Введіть номер рахунку отримувача:");
             string receiverAccountNumber = Console.ReadLine();
 
-            Console.WriteLine("Введіть суму для перерахування:");
-            if (int.TryParse(Console.ReadLine(), out int amountTransfer))
+            int amountTransfer = GetValidatedAmount("Введіть суму для перерахування:");
+            if (amountTransfer > 0)
             {
                 selectedBank.TransferFunds(currentAccount.CardNumber, receiverAccountNumber, amountTransfer);
-            }
-            else
-            {
-                Console.WriteLine("Невірний формат суми.");
             }
         }
 
